@@ -34,7 +34,7 @@ int* kingdomCards(int k1, int k2, int k3, int k4, int k5, int k6, int k7,
   return k;
 }
 
-int initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
+int  initializeGame(int numPlayers, int kingdomCards[10], int randomSeed,
 		   struct gameState *state) {
 
   int i;
@@ -647,13 +647,19 @@ int adventurerEffect(int currentPlayer, struct gameState *state, int temphand[MA
 	int drawnTreasure = 0;
 	int cardDrawn;
 	int z = 0;
+	int shuffleCount = 0;
 	
 	//Reveal cards until two treasure cards are drawn
 	//non-treasure cards are put into a temp hand that will be discarded
 	while(drawnTreasure < 2){
-		if(state->deckCount[currentPlayer] < 1){
+		if(state->deckCount[currentPlayer] < 1 && shuffleCount < 1){
 			shuffle(currentPlayer, state);
+			shuffleCount++;
 		}
+		else if(state->deckCount[currentPlayer] < 1 && shuffleCount > 0){
+			drawnTreasure++;
+			break;
+		}	
 		drawCard(currentPlayer, state);
 		cardDrawn = state->hand[currentPlayer][state->handCount[currentPlayer]-1];
 		if (cardDrawn == copper || cardDrawn == silver || cardDrawn == gold)
